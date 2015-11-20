@@ -164,6 +164,20 @@ namespace FluentAssertions.Primitives
             return new AndWhichConstraint<TAssertions, T>((TAssertions)this, (T)((object)Subject));
         }
 
+        public AndConstraint<TAssertions> BeAssignableTo(Type expectedType, string because = "", params object[] reasonArgs)
+        {
+            Execute.Assertion
+                .ForCondition(Subject.GetType().IsAssignableFrom(expectedType))
+                .BecauseOf(because, reasonArgs)
+                .FailWith("Expected {context:" + Context + "} to be assignable to {0}{reason}, but {1} is not",
+                    expectedType,
+                    Subject.GetType());
+
+            Subject.GetType().IsAssignableFrom(expectedType).Should().Be(true, because, reasonArgs);
+
+            return new AndConstraint<TAssertions>((TAssertions)this);
+        }
+
         /// <summary>
         /// Asserts that the <paramref name="predicate" /> is satisfied.
         /// </summary>
